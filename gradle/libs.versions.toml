@@ -1,0 +1,18 @@
+[versions]
+runPaper = "2.3.0"
+shadow = "8.1.1"
+pluginYml = "0.6.0"
+paperweight = "1.7.1"
+paperApi = "1.21-R0.1-SNAPSHOT"
+lombok = "1.18.34"
+annotations = "24.1.0"
+
+[plugins]
+runPaper = { id = "xyz.jpenilla.run-paper", version.ref ="runPaper" }
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+pluginYml = { id = "net.minecrell.plugin-yml.paper", version.ref = "pluginYml" }
+paperweight = { id = "io.papermc.paperweight.userdev", version.ref = "paperweight" }
+
+[libraries]
+lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
+annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
