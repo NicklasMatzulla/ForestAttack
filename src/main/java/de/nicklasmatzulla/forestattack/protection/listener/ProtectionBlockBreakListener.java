@@ -22,19 +22,27 @@
  * SOFTWARE.
  */
 
-package de.nicklasmatzulla.papertemplate;
+package de.nicklasmatzulla.forestattack.protection.listener;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import de.nicklasmatzulla.forestattack.util.LocationsUtil;
+import lombok.AllArgsConstructor;
+import org.bukkit.Location;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.jetbrains.annotations.NotNull;
 
-public class PaperTemplate extends JavaPlugin {
+@SuppressWarnings("unused")
+@AllArgsConstructor
+public class ProtectionBlockBreakListener implements Listener {
+    private final LocationsUtil locationsUtil;
 
-    @Override
-    public void onEnable() {
-        super.onEnable();
+    @EventHandler
+    public void onBlockBreakEvent(final @NotNull BlockBreakEvent event) {
+        final Location location = event.getBlock().getLocation();
+        if (this.locationsUtil.inProtectedArea(location)) {
+            event.setCancelled(true);
+        }
     }
 
-    @Override
-    public void onDisable() {
-        super.onDisable();
-    }
 }

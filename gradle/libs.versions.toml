@@ -6,6 +6,10 @@ paperweight = "1.7.1"
 paperApi = "1.21-R0.1-SNAPSHOT"
 lombok = "1.18.34"
 annotations = "24.1.0"
+triumphGui = "3.1.10"
+placeholderApi = "2.11.6"
+luckperms = "5.3"
+premiumVanish = "2.9.0-4"
 
 [plugins]
 runPaper = { id = "xyz.jpenilla.run-paper", version.ref ="runPaper" }
@@ -16,3 +20,7 @@ paperweight = { id = "io.papermc.paperweight.userdev", version.ref = "paperweigh
 [libraries]
 lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+triumphGui = { group = "dev.triumphteam", name = "triumph-gui", version.ref = "triumphGui" }
+placeholderApi = { group = "me.clip", name = "placeholderapi", version.ref = "placeholderApi" }
+luckperms = { group = "net.luckperms", name = "api", version.ref = "luckperms" }
+premiumVanish = { group = "com.github.LeonMangler", name = "PremiumVanishAPI", version.ref = "premiumVanish" }

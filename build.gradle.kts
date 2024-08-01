@@ -25,6 +25,7 @@
 @file:Suppress("SpellCheckingInspection")
 
 import io.papermc.paperweight.userdev.ReobfArtifactConfiguration
+import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 
 plugins {
@@ -37,15 +38,17 @@ plugins {
 
 group = "de.nicklasmatzulla"
 version = "1.0.0-SNAPSHOT"
-description = "PaperTemplate is a quick starter that makes it easy to create new programming projects using my libraries."
-val website = "https://github.com/NicklasMatzulla/"
+description = "The main system for ForestAttack, a game mode based on CraftAttack."
+val website = "https://github.com/NicklasMatzulla/ForestAttack/"
 val authors = listOf("Nicklas Matzulla")
-val apiVersion = "1.20"
+val apiVersion = "1.21"
 val foliaSupported = false
 
 repositories {
     mavenCentral()
-    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.papermc.io/repository/maven-public/") // Paper
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi") // PlaceholderAPI
+    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -53,10 +56,18 @@ dependencies {
     compileOnly(libs.lombok)
     implementation(libs.annotations)
     paperweight.paperDevBundle(libs.versions.paperApi)
+    implementation(libs.triumphGui)
+    compileOnly(libs.placeholderApi)
+    compileOnly(libs.luckperms)
+    compileOnly(libs.premiumVanish)
 
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
     testImplementation(libs.annotations)
+    testImplementation(libs.triumphGui)
+    testCompileOnly(libs.placeholderApi)
+    testCompileOnly(libs.luckperms)
+    testCompileOnly(libs.premiumVanish)
 }
 
 java {
@@ -91,4 +102,15 @@ paper {
     generateLibrariesJson = true
     foliaSupported = this@Build_gradle.foliaSupported
     apiVersion = this@Build_gradle.apiVersion
+    serverDependencies {
+        register("PlaceholderAPI") {
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        }
+        register("LuckPerms") {
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        }
+        register("PremiumVanish") {
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        }
+    }
 }
