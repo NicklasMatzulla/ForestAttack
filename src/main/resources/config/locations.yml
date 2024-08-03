@@ -7,12 +7,12 @@
 # ╚═╝  ╚═══╝╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝ ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝╚═════╝ ╚══════╝
 #
 # Copyright 2024 Nicklas Matzulla
-# ForestAttack v1.0.0-SNAPSHOT
+# ForestAttack v1.0.0
 #
 
 spawn:
   spawnPosition:
-    world: "world"
+    world: world
     x: -228.5
     y: 208.0
     z: -8.5
@@ -20,18 +20,18 @@ spawn:
     pitch: 0
   protection:
     min:
-      world: "world"
+      world: world
       x: -328
       y: -65
       z: 92
     max:
-      world: "world"
+      world: world
       x: -128
       y: 320
       z: -108
 shop:
   spawnPosition:
-    world: "world"
+    world: world
     x: -3841.5
     y: 63.0
     z: -3319.5
@@ -39,12 +39,12 @@ shop:
     pitch: 0
   protection:
     min:
-      world: "world"
-      x: -3950
-      y: -64
-      z: -3050
+      world: world
+      x: -3853
+      y: -65
+      z: -3304
     max:
-      world: "world"
-      x: -3675
+      world: world
+      x: -3826
       y: 320
-      z: -3180
+      z: -3336

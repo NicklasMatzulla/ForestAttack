@@ -18,15 +18,27 @@
 
 general:
   prefix: "<dark_gray>»</dark_gray> <yellow>ForestAttack</yellow> <dark_gray>|</dark_gray> "
-  onlyPlayers: "<red>Nur <red>Spieler</red> können diesen <red>Befehl ausführen</red>!</red>"
-  playerNotFound: "Der Spieler kann <red>nicht gefunden werden</red>."
+  onlyPlayers: "Nur <red>Spieler</red> können diesen <red>Befehl ausführen</red>!"
+  playerNotFound: "Der <red>Spieler</red> kann <red>nicht gefunden</red> werden."
   unsupportedOperation: "Diese <red>Aktion</red> ist derzeit <red>nicht unterstützt</red>!"
+  patterns:
+    enabled: "<green>aktiviert</green>"
+    disabled: "<red>deaktiviert</red>"
+  kickMessage:
+    - "<dark_gray><st>■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■</st></dark_gray>"
+    - ""
+    - "Die <red>Verbindung zum Server</red> wurde <red>unterbrochen</red>."
+    - "Fehler <dark_gray>|</dark_gray> <kick_reason>"
+    - ""
+    - "<dark_gray><st>■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■</st></dark_gray>"
+    - ""
+
+errors:
+  kick:
+    failedLoadData: "<red>Daten können nicht geladen werden</red>"
 
 features:
   chat:
-    motd:
-      firstLine:
-      secondLine:
     joinMessage: "<name_colored> hat den <green>Server betreten</green>."
     quitMessage: "<name_colored> hat den <red>Server verlassen</red>."
     chatFormat: "<dark_gray>»</dark_gray> <name_prefixed_and_colored> <dark_gray>|</dark_gray> <message>"
@@ -38,7 +50,7 @@ features:
       - ""
     footer:
       - ""
-      - "Online <dark_gray>|</dark_gray> <online_players><dark_gray>/</dark_gray><red><max_players></red>"
+      - "Online <dark_gray>| <green><online_players></green>/<red><max_players></red></dark_gray>"
       - ""
       - "<dark_gray>   <st>■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■</st>   </dark_gray>"
     vanishedNameTagColor: "YELLOW"
@@ -51,9 +63,14 @@ commands:
     disabled: "Du hast die <red>Chunkgrenzen deaktiviert</red>."
   enderchest:
     openedSelf: "Du hast deine Enderchest <green>geöffnet</green>."
-    openedOther: "Du hast die Enderchest von <victim_name_colored> <green>geöffnet</green>."
+    openedOther: "Du hast die <green>Enderchest</green> von <victim_name_colored> <green>geöffnet</green>."
     failed: "Die <red>Enderchest</red> von <victim_name_colored> konnte <red>nicht geöffnet</red> werden."
     # Prefixes and colors of offline players are not loaded for performance reasons.
     offlinePlayerTitle: "<dark_gray><lang:container.enderchest> |</dark_gray> <red>Offline</red>"
   shop:
     disabled: "Der <red>Shop</red> ist <red>derzeit deaktiviert</red>!"
+    updateStatus: "Du hast den Shop <status>."
+    usage: "Nutze <dark_gray>➥ /<aqua>shop</aqua> <<aqua>enable</aqua>/<aqua>disable</aqua>>"
+  kit:
+    claimed: "Du hast dein <green>Starterkit erfolgreich abgeholt</green>."
+    alreadyClaimed: "Du hast dein <red>Starterkit bereits abgeholt</red>."

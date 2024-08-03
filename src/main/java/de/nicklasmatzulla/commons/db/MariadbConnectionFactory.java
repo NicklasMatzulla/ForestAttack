@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Nicklas Matzulla
+ * Copyright (c) 2023-2024 Nicklas Matzulla
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +22,37 @@
  * SOFTWARE.
  */
 
-@file:Suppress("SpellCheckingInspection")
+package de.nicklasmatzulla.commons.db;
 
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
+
+@SuppressWarnings("unused")
+@Accessors(fluent = true)
+@Setter
+public final class MariadbConnectionFactory {
+
+    private String host;
+    private int port;
+    private String user;
+    private String pass;
+    private String db;
+    private boolean useSsl;
+    private int maxPoolSize;
+
+    @NotNull
+    public HikariDataSource build() {
+        final HikariConfig config = new HikariConfig();
+        config.setMaximumPoolSize(this.maxPoolSize);
+        config.setDriverClassName("org.mariadb.jdbc.Driver");
+        config.setJdbcUrl("jdbc:mariadb://" + this.host + ":" + this.port + "/" + this.db + "?useSSL=" + this.useSsl);
+        config.addDataSourceProperty("user", this.user);
+        config.addDataSourceProperty("password", this.pass);
+        config.setAutoCommit(true);
+        return new HikariDataSource(config);
+    }
+
 }
-
-rootProject.name = "ForestAttack"
-

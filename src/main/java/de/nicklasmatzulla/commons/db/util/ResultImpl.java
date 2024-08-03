@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Nicklas Matzulla
+ * Copyright (c) 2023-2024 Nicklas Matzulla
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +22,40 @@
  * SOFTWARE.
  */
 
-@file:Suppress("SpellCheckingInspection")
+package de.nicklasmatzulla.commons.db.util;
 
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+import de.nicklasmatzulla.commons.api.db.util.IResult;
+import de.nicklasmatzulla.commons.api.db.util.IRow;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Optional;
+
+@SuppressWarnings("ClassCanBeRecord")
+public final class ResultImpl implements IResult {
+
+    private final List<IRow> rows;
+
+    public ResultImpl(final @NotNull List<IRow> rows) {
+        this.rows = rows;
+    }
+
+    @Override
+    public @NotNull List<IRow> getRows() {
+        return this.rows;
+    }
+
+    @Override
+    public @NotNull Optional<IRow> get(final int index) {
+        if (index < this.rows.size()) {
+            final IRow row = this.rows.get(index);
+            return Optional.of(row);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public @NotNull IRow getFirstRow() {
+        return this.rows.getFirst();
+    }
 }
-
-rootProject.name = "ForestAttack"
-

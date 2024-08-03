@@ -49,6 +49,10 @@ public class MessagesConfig extends BaseConfig {
     private final Component onlyPlayerMessageComponent;
     private final Component playerNotFoundMessageComponent;
     private final Component unsupportedOperationMessageComponent;
+    private final Component enabledPatternComponent;
+    private final Component disabledPatternComponent;
+    // Error
+    private final Component errorLoadDataKickComponent;
     // Chat
     private final String chatFormat;
     private final NamedTextColor vanishedNameTagColor;
@@ -58,6 +62,9 @@ public class MessagesConfig extends BaseConfig {
     private final Component chunkBorderDisabledComponent;
     private final Component enderchestOpenedSelfMessageComponent;
     private final Component shopDisabledMessageComponent;
+    private final Component shopUsageMessageComponent;
+    private final Component kitClaimedMessageComponent;
+    private final Component kitAlreadyClaimedMessageComponent;
 
     public MessagesConfig(final @NotNull Logger logger) {
         super(logger, new File("plugins/ForestAttack/messages.yml"), "config/messages.yml", true);
@@ -66,6 +73,10 @@ public class MessagesConfig extends BaseConfig {
         this.onlyPlayerMessageComponent = getPrefixedComponent("general.onlyPlayers");
         this.playerNotFoundMessageComponent = getPrefixedComponent("general.playerNotFound");
         this.unsupportedOperationMessageComponent = getPrefixedComponent("general.unsupportedOperation");
+        this.enabledPatternComponent = getComponent("general.patterns.enabled");
+        this.disabledPatternComponent = getComponent("general.patterns.disabled");
+        // Error
+        this.errorLoadDataKickComponent = getComponent("errors.kick.failedLoadData");
         // Chat
         this.chatFormat = this.config.getString("features.chat.chatFormat", "<red>chatFormat</red>");
         this.vanishedNameTagColor = NamedTextColor.NAMES.valueOr(this.config.getString("features.chat.vanishedNameTagColor", "YELLOW"), NamedTextColor.YELLOW);
@@ -75,6 +86,14 @@ public class MessagesConfig extends BaseConfig {
         this.chunkBorderDisabledComponent = getPrefixedComponent("commands.chunkBorders.disabled");
         this.enderchestOpenedSelfMessageComponent = getPrefixedComponent("commands.enderchest.openedSelf");
         this.shopDisabledMessageComponent = getPrefixedComponent("commands.shop.disabled");
+        this.shopUsageMessageComponent = getPrefixedComponent("commands.shop.usage");
+        this.kitClaimedMessageComponent = getPrefixedComponent("commands.kit.claimed");
+        this.kitAlreadyClaimedMessageComponent = getPrefixedComponent("commands.kit.alreadyClaimed");
+    }
+
+    public @NotNull Component getKickMessageComponent(final @NotNull Component kickReason) {
+        final TagResolver kickReasonPlaceholder = Placeholder.component("kick_reason", kickReason);
+        return getComponent("general.kickMessage", kickReasonPlaceholder);
     }
 
     public @NotNull Component getTabListHeaderComponent(final @NotNull Player player, final int onlinePlayers, final int maxPlayers) {
@@ -122,6 +141,12 @@ public class MessagesConfig extends BaseConfig {
         final String victimName = victim.getName() == null ? "Unknown" : victim.getName();
         final TagResolver.Single playerNameTagResolver = Placeholder.unparsed("victim_name", victimName);
         return getComponent("commands.enderchest.offlinePlayerTitle", playerNameTagResolver);
+    }
+
+    public Component getShopStatusMessageComponent(final boolean status) {
+        final Component statusComponent = status ? this.enabledPatternComponent : this.disabledPatternComponent;
+        final TagResolver statusPlaceholder = Placeholder.component("status", statusComponent);
+        return getPrefixedComponent("commands.shop.updateStatus", statusPlaceholder);
     }
 
     private @NotNull Component getPrefixedComponent(final @NotNull OfflinePlayer offlinePlayer, final @NotNull String key, final @NotNull TagResolver... tagResolvers) {

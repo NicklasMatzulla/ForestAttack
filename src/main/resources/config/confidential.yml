@@ -1,0 +1,8 @@
+mariadb:
+  host: "localhost"
+  port: 3306
+  user: "forestattack"
+  pass: "forestattack"
+  db: "forestattack"
+  useSSL: false
+  maxPoolSize: 8

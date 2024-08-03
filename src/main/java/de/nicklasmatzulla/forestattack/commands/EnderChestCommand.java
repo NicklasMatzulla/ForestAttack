@@ -64,7 +64,8 @@ public class EnderChestCommand {
                         .requires(this::checkPlayerArgumentPermission)
                         .suggests(this::suggestPlayerArgument)
                         .executes(this::executePlayerArgument)
-                ).build();
+                )
+                .build();
     }
 
     private boolean checkBasePermission(final CommandSourceStack source) {

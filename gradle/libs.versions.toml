@@ -10,6 +10,8 @@ triumphGui = "3.1.10"
 placeholderApi = "2.11.6"
 luckperms = "5.3"
 premiumVanish = "2.9.0-4"
+hikaricp = "5.1.0"
+mariadbJdbc = "3.4.1"
 
 [plugins]
 runPaper = { id = "xyz.jpenilla.run-paper", version.ref ="runPaper" }
@@ -24,3 +26,5 @@ triumphGui = { group = "dev.triumphteam", name = "triumph-gui", version.ref = "t
 placeholderApi = { group = "me.clip", name = "placeholderapi", version.ref = "placeholderApi" }
 luckperms = { group = "net.luckperms", name = "api", version.ref = "luckperms" }
 premiumVanish = { group = "com.github.LeonMangler", name = "PremiumVanishAPI", version.ref = "premiumVanish" }
+hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikaricp" }
+maraidbJdbc = { group = "org.mariadb.jdbc", name = "mariadb-java-client", version.ref = "mariadbJdbc" }

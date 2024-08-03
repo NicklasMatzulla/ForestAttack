@@ -25,7 +25,10 @@
 package de.nicklasmatzulla.forestattack.commands;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.nicklasmatzulla.forestattack.config.LocationsConfig;
 import de.nicklasmatzulla.forestattack.config.MessagesConfig;
@@ -40,6 +43,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 @SuppressWarnings({"UnstableApiUsage", "SameReturnValue"})
 @AllArgsConstructor
 public class ShopCommand {
@@ -52,6 +58,11 @@ public class ShopCommand {
         return Commands.literal("shop")
                 .requires(this::checkBasePermission)
                 .executes(this::executeBase)
+                .then(Commands.argument("status", StringArgumentType.string())
+                        .requires(this::checkStatusArgumentPermission)
+                        .suggests(this::suggestStatusArgument)
+                        .executes(this::executeStatusArgument)
+                )
                 .build();
     }
 
@@ -66,7 +77,7 @@ public class ShopCommand {
             commandSender.sendMessage(onlyPlayerMessageComponent);
             return Command.SINGLE_SUCCESS;
         }
-        final boolean shopEnabled = this.settingsConfig.isShowEnabled();
+        final boolean shopEnabled = this.settingsConfig.isShopEnabled();
         if (!shopEnabled) {
             final Component shopDisabledMessageComponent = this.messagesConfig.getShopDisabledMessageComponent();
             player.sendMessage(shopDisabledMessageComponent);
@@ -78,6 +89,37 @@ public class ShopCommand {
             return Command.SINGLE_SUCCESS;
         }
         this.locationsUtil.teleportWithTimer(player, spawnPointLocation);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private boolean checkStatusArgumentPermission(final @NotNull CommandSourceStack source) {
+        return source.getSender().hasPermission("forestattack.commands.shop.status");
+    }
+
+    private CompletableFuture<Suggestions> suggestStatusArgument(final @NotNull CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
+        List.of("enable", "disable").forEach(builder::suggest);
+        return builder.buildFuture();
+    }
+
+    private int executeStatusArgument(final @NotNull CommandContext<CommandSourceStack> context) {
+        final CommandSender commandSender = context.getSource().getSender();
+        final String statusName = context.getArgument("status", String.class);
+        switch (statusName) {
+            case "enable" -> {
+                final Component shopStatusMessageComponent = this.messagesConfig.getShopStatusMessageComponent(true);
+                this.settingsConfig.setShopEnabled(true);
+                commandSender.sendMessage(shopStatusMessageComponent);
+            }
+            case "disable" -> {
+                final Component shopStatusMessageComponent = this.messagesConfig.getShopStatusMessageComponent(false);
+                this.settingsConfig.setShopEnabled(false);
+                commandSender.sendMessage(shopStatusMessageComponent);
+            }
+            default -> {
+                final Component usageMessageComponent = this.messagesConfig.getShopUsageMessageComponent();
+                commandSender.sendMessage(usageMessageComponent);
+            }
+        }
         return Command.SINGLE_SUCCESS;
     }
 

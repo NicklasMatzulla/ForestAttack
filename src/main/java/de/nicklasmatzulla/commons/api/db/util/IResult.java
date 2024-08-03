@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2024 Nicklas Matzulla
+ * Copyright (c) 2023-2024 Nicklas Matzulla
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +22,36 @@
  * SOFTWARE.
  */
 
-@file:Suppress("SpellCheckingInspection")
+package de.nicklasmatzulla.commons.api.db.util;
 
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * The implementation of this class provides an SQL response.
+ */
+@SuppressWarnings({"unused", "UnusedReturnValue"})
+public interface IResult {
+
+    /**
+     * Get all rows of the query.
+     * @return {@link List} of {@link IRow}
+     */
+    @NotNull List<IRow> getRows();
+
+    /**
+     * Get a specific row of the query by index.
+     * @param index Index of the row.
+     * @return {@link Optional} of {@link IRow}
+     */
+    @NotNull Optional<IRow> get(int index);
+
+    /**
+     * Get the first row of the query.
+     * @return {@link IRow}
+     */
+    @NotNull IRow getFirstRow();
+
 }
-
-rootProject.name = "ForestAttack"
-

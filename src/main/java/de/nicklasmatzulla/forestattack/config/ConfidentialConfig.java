@@ -24,43 +24,37 @@
 
 package de.nicklasmatzulla.forestattack.config;
 
+import com.zaxxer.hikari.HikariDataSource;
+import de.nicklasmatzulla.commons.db.MariadbConnectionFactory;
 import de.nicklasmatzulla.forestattack.config.util.BaseConfig;
-import lombok.Getter;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.io.File;
-import java.util.List;
 
-@Getter
-public class SettingsConfig extends BaseConfig {
-    private boolean shopEnabled;
-    private final List<ItemStack> starterKitItemStacks;
+public class ConfidentialConfig extends BaseConfig {
 
-    public SettingsConfig(@NotNull Logger logger) {
-        super(logger, new File("plugins/ForestAttack/settings.yml"), "config/settings.yml", true);
-        this.shopEnabled = this.config.getBoolean("commands.shop.enabled", true);
-        this.starterKitItemStacks = initStarterKitItemStacks();
+    public ConfidentialConfig(final @NotNull Logger logger) {
+        super(logger, new File("plugins/ForestAttack/confidential.yml"), "config/confidential.yml", true);
     }
 
-    public void setShopEnabled(final boolean enabled) {
-        this.config.set("commands.shop.enabled", enabled);
-        save();
-        this.shopEnabled = enabled;
-    }
-
-    private @NotNull List<ItemStack> initStarterKitItemStacks() {
-        return this.config.getStringList("commands.kit.items").stream()
-                .map(element -> {
-                    final String[] elements = element.split(":");
-                    final String itemName = elements[0];
-                    final int amount = Integer.parseInt(elements[1]);
-                    final Material material = Material.valueOf(itemName);
-                    return new ItemStack(material, amount);
-                })
-                .toList();
+    public @NotNull HikariDataSource createHikariDataSource() {
+        final String host = this.config.getString("mariadb.host", "localhost");
+        final int port = this.config.getInt("mariadb.port", 3306);
+        final String user = this.config.getString("mariadb.user", "forestattack");
+        final String pass = this.config.getString("mariadb.pass", "forestattack");
+        final String db = this.config.getString("mariadb.db", "forestattack");
+        final boolean useSSL = this.config.getBoolean("mariadb.useSSL", false);
+        final int maxPoolSize = this.config.getInt("mariadb.maxPoolSize", 8);
+        return new MariadbConnectionFactory()
+                .host(host)
+                .port(port)
+                .user(user)
+                .pass(pass)
+                .db(db)
+                .useSsl(useSSL)
+                .maxPoolSize(maxPoolSize)
+                .build();
     }
 
 }

@@ -37,7 +37,7 @@ plugins {
 }
 
 group = "de.nicklasmatzulla"
-version = "1.0.0-SNAPSHOT"
+version = "1.1.0-SNAPSHOT"
 description = "The main system for ForestAttack, a game mode based on CraftAttack."
 val website = "https://github.com/NicklasMatzulla/ForestAttack/"
 val authors = listOf("Nicklas Matzulla")
@@ -60,6 +60,8 @@ dependencies {
     compileOnly(libs.placeholderApi)
     compileOnly(libs.luckperms)
     compileOnly(libs.premiumVanish)
+    implementation(libs.hikaricp)
+    implementation(libs.maraidbJdbc)
 
     testAnnotationProcessor(libs.lombok)
     testCompileOnly(libs.lombok)
@@ -68,6 +70,8 @@ dependencies {
     testCompileOnly(libs.placeholderApi)
     testCompileOnly(libs.luckperms)
     testCompileOnly(libs.premiumVanish)
+    testImplementation(libs.hikaricp)
+    testImplementation(libs.maraidbJdbc)
 }
 
 java {
