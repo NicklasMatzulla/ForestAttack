@@ -37,7 +37,7 @@ plugins {
 }
 
 group = "de.nicklasmatzulla"
-version = "1.1.0-SNAPSHOT"
+version = "1.1.1"
 description = "The main system for ForestAttack, a game mode based on CraftAttack."
 val website = "https://github.com/NicklasMatzulla/ForestAttack/"
 val authors = listOf("Nicklas Matzulla")

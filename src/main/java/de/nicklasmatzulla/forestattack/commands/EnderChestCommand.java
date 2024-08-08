@@ -113,7 +113,7 @@ public class EnderChestCommand {
         if (victim.isOnline()) {
             player.openInventory(Objects.requireNonNull(victim.getPlayer()).getEnderChest());
         } else {
-            final Optional<ItemStack[]> optItemStacks = this.nmsBinding.loadOfflinePlayerEnderChest("world", player.getUniqueId());
+            final Optional<ItemStack[]> optItemStacks = this.nmsBinding.loadOfflinePlayerEnderChest("world", victim.getUniqueId());
             if (optItemStacks.isEmpty()) {
                 final Component failedMessageComponent = this.messagesConfig.getEnderchestFailedMessageComponent(victim);
                 player.sendMessage(failedMessageComponent);
