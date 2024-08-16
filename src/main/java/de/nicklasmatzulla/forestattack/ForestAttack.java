@@ -60,82 +60,84 @@ public class ForestAttack extends JavaPlugin {
     @Override
     public void onEnable() {
         final Logger logger = getSLF4JLogger();
+        final PluginManager pluginManager = Bukkit.getPluginManager();
+
+        // Configurations
+        final ConfidentialConfig confidentialConfig = new ConfidentialConfig(logger);
+        final SettingsConfig settingsConfig = new SettingsConfig(logger);
+        final MessagesConfig messagesConfig = new MessagesConfig(logger);
+        final LocationsConfig locationsConfig = new LocationsConfig(logger);
+
+        final ProfileManagerImpl profileManager;
         try {
-            final PluginManager pluginManager = Bukkit.getPluginManager();
-
-            // Configurations
-            final ConfidentialConfig confidentialConfig = new ConfidentialConfig(logger);
-            final SettingsConfig settingsConfig = new SettingsConfig(logger);
-            final MessagesConfig messagesConfig = new MessagesConfig(logger);
-            final LocationsConfig locationsConfig = new LocationsConfig(logger);
-
             // Establish database connection
             this.dataSource = confidentialConfig.createHikariDataSource();
             final DatabaseManagerImpl databaseManager = new DatabaseManagerImpl(dataSource);
 
             // Managers
-            final ProfileManagerImpl profileManager = new ProfileManagerImpl(logger, databaseManager);
-
-            // Registration of utility and helper classes
-            final TabListStyle tabListStyle = new TabListStyle(this, messagesConfig);
-            final LocationsUtil locationsUtil = new LocationsUtil(this, locationsConfig);
-            final NMSBindingImpl_v1_20_R1 nmsBinding = new NMSBindingImpl_v1_20_R1();
-
-            // Listener registration
-            // Chat listeners
-            pluginManager.registerEvents(new ChatAsyncChatListener(messagesConfig), this);
-            new ChatNodeMutateListener(this, tabListStyle);
-            pluginManager.registerEvents(new ChatPlayerShowListener(tabListStyle), this);
-            pluginManager.registerEvents(new ChatPlayerJoinListener(this, messagesConfig, tabListStyle), this);
-            pluginManager.registerEvents(new ChatPlayerQuitListener(messagesConfig, tabListStyle), this);
-            pluginManager.registerEvents(new ChatPlayerHideListener(tabListStyle), this);
-            // Protection listeners
-            pluginManager.registerEvents(new ProtectionBlockBreakListener(locationsUtil), this);
-            pluginManager.registerEvents(new ProtectionBlockExplodeListener(locationsUtil), this);
-            pluginManager.registerEvents(new ProtectionBlockPistonRetractListener(locationsUtil), this);
-            pluginManager.registerEvents(new ProtectionBlockPlaceListener(locationsUtil), this);
-            pluginManager.registerEvents(new ProtectionCreatureSpawnListener(locationsUtil), this);
-            pluginManager.registerEvents(new ProtectionEntityDamageListener(locationsUtil), this);
-            pluginManager.registerEvents(new ProtectionEntityExplodeListener(locationsUtil), this);
-            pluginManager.registerEvents(new ProtectionPistonExtendListener(locationsUtil), this);
-            pluginManager.registerEvents(new ProtectionPlayerInteractListener(locationsUtil), this);
-            // Profile listeners
-            pluginManager.registerEvents(new ProfilePlayerJoinListener(logger, profileManager, messagesConfig), this);
-
-            // Register commands
-            final @NotNull LifecycleEventManager<Plugin> manager = this.getLifecycleManager();
-            manager.registerEventHandler(LifecycleEvents.COMMANDS, event -> {
-                final Commands commands = event.registrar();
-                commands.register(new BiomeCommand(messagesConfig).createBrigadierCommand(),
-                        "Displays the name of the biome in which the player is located.",
-                        List.of("biom")
-                );
-                commands.register(new ChunkBorderCommand(this, messagesConfig).createBrigadierCommand(),
-                        "Makes the chunk boundaries visible",
-                        List.of("cb")
-                );
-                commands.register(new EnderChestCommand(messagesConfig, nmsBinding).createBrigadierCommand(),
-                        "Opens the own Enderchest or that of another player.",
-                        List.of("ec")
-                );
-                commands.register(new KitCommand(logger, settingsConfig, messagesConfig, profileManager).createBrigadierCommand(),
-                        "Receive the starter kit.",
-                        List.of("starterkit", "startkit")
-                );
-                commands.register(new ShopCommand(settingsConfig, messagesConfig, locationsConfig, locationsUtil).createBrigadierCommand(),
-                        "Teleports the player to the shop location."
-                );
-                commands.register(new SpawnCommand(messagesConfig, locationsConfig, locationsUtil).createBrigadierCommand(),
-                        "Teleports the player to the spawn point."
-                );
-            });
-
-            // Hooks registration
-            new PlaceholderAPIHook().register();
+            profileManager = new ProfileManagerImpl(logger, databaseManager);
         } catch (final @NotNull Exception e) {
-            logger.error("Failed to register plugin functions, shutting down server", e);
+            logger.error("Database error occurred, shutting down server.", e);
             Bukkit.getServer().shutdown();
+            return;
         }
+
+        // Registration of utility and helper classes
+        final TabListStyle tabListStyle = new TabListStyle(this, messagesConfig);
+        final LocationsUtil locationsUtil = new LocationsUtil(this, locationsConfig);
+        final NMSBindingImpl_v1_20_R1 nmsBinding = new NMSBindingImpl_v1_20_R1();
+
+        // Listener registration
+        // Chat listeners
+        pluginManager.registerEvents(new ChatAsyncChatListener(messagesConfig), this);
+        new ChatNodeMutateListener(this, tabListStyle);
+        pluginManager.registerEvents(new ChatPlayerShowListener(tabListStyle), this);
+        pluginManager.registerEvents(new ChatPlayerJoinListener(this, messagesConfig, tabListStyle), this);
+        pluginManager.registerEvents(new ChatPlayerQuitListener(messagesConfig, tabListStyle), this);
+        pluginManager.registerEvents(new ChatPlayerHideListener(tabListStyle), this);
+        // Protection listeners
+        pluginManager.registerEvents(new ProtectionBlockBreakListener(locationsUtil), this);
+        pluginManager.registerEvents(new ProtectionBlockExplodeListener(locationsUtil), this);
+        pluginManager.registerEvents(new ProtectionBlockPistonRetractListener(locationsUtil), this);
+        pluginManager.registerEvents(new ProtectionBlockPlaceListener(locationsUtil), this);
+        pluginManager.registerEvents(new ProtectionCreatureSpawnListener(locationsUtil), this);
+        pluginManager.registerEvents(new ProtectionEntityDamageListener(locationsUtil), this);
+        pluginManager.registerEvents(new ProtectionEntityExplodeListener(locationsUtil), this);
+        pluginManager.registerEvents(new ProtectionPistonExtendListener(locationsUtil), this);
+        pluginManager.registerEvents(new ProtectionPlayerInteractListener(locationsUtil), this);
+        // Profile listeners
+        pluginManager.registerEvents(new ProfilePlayerJoinListener(logger, profileManager, messagesConfig), this);
+
+        // Register commands
+        final @NotNull LifecycleEventManager<Plugin> manager = this.getLifecycleManager();
+        manager.registerEventHandler(LifecycleEvents.COMMANDS, event -> {
+            final Commands commands = event.registrar();
+            commands.register(new BiomeCommand(messagesConfig).createBrigadierCommand(),
+                    "Displays the name of the biome in which the player is located.",
+                    List.of("biom")
+            );
+            commands.register(new ChunkBorderCommand(this, messagesConfig).createBrigadierCommand(),
+                    "Makes the chunk boundaries visible",
+                    List.of("cb")
+            );
+            commands.register(new EnderChestCommand(messagesConfig, nmsBinding).createBrigadierCommand(),
+                    "Opens the own Enderchest or that of another player.",
+                    List.of("ec")
+            );
+            commands.register(new KitCommand(logger, settingsConfig, messagesConfig, profileManager).createBrigadierCommand(),
+                    "Receive the starter kit.",
+                    List.of("starterkit", "startkit")
+            );
+            commands.register(new ShopCommand(settingsConfig, messagesConfig, locationsConfig, locationsUtil).createBrigadierCommand(),
+                    "Teleports the player to the shop location."
+            );
+            commands.register(new SpawnCommand(settingsConfig, messagesConfig, locationsConfig, locationsUtil).createBrigadierCommand(),
+                    "Teleports the player to the spawn point."
+            );
+        });
+
+        // Hooks registration
+        new PlaceholderAPIHook().register();
     }
 
     @Override

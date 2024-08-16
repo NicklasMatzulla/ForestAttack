@@ -36,13 +36,21 @@ import java.util.List;
 
 @Getter
 public class SettingsConfig extends BaseConfig {
+    private boolean spawnEnabled;
     private boolean shopEnabled;
     private final List<ItemStack> starterKitItemStacks;
 
     public SettingsConfig(@NotNull Logger logger) {
         super(logger, new File("plugins/ForestAttack/settings.yml"), "config/settings.yml", true);
+        this.spawnEnabled = this.config.getBoolean("commands.spawn.enabled", true);
         this.shopEnabled = this.config.getBoolean("commands.shop.enabled", true);
         this.starterKitItemStacks = initStarterKitItemStacks();
+    }
+
+    public void setSpawnEnabled(final boolean enabled) {
+        this.config.set("commands.spawn.enabled", enabled);
+        save();
+        this.spawnEnabled = enabled;
     }
 
     public void setShopEnabled(final boolean enabled) {

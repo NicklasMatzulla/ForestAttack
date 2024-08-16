@@ -61,6 +61,8 @@ public class MessagesConfig extends BaseConfig {
     private final Component chunkBorderEnabledComponent;
     private final Component chunkBorderDisabledComponent;
     private final Component enderchestOpenedSelfMessageComponent;
+    private final Component spawnDisabledMessageComponent;
+    private final Component spawnUsageMessageComponent;
     private final Component shopDisabledMessageComponent;
     private final Component shopUsageMessageComponent;
     private final Component kitClaimedMessageComponent;
@@ -85,6 +87,8 @@ public class MessagesConfig extends BaseConfig {
         this.chunkBorderEnabledComponent = getPrefixedComponent("commands.chunkBorders.enabled");
         this.chunkBorderDisabledComponent = getPrefixedComponent("commands.chunkBorders.disabled");
         this.enderchestOpenedSelfMessageComponent = getPrefixedComponent("commands.enderchest.openedSelf");
+        this.spawnDisabledMessageComponent = getPrefixedComponent("commands.spawn.disabled");
+        this.spawnUsageMessageComponent = getPrefixedComponent("commands.spawn.usage");
         this.shopDisabledMessageComponent = getPrefixedComponent("commands.shop.disabled");
         this.shopUsageMessageComponent = getPrefixedComponent("commands.shop.usage");
         this.kitClaimedMessageComponent = getPrefixedComponent("commands.kit.claimed");
@@ -141,6 +145,12 @@ public class MessagesConfig extends BaseConfig {
         final String victimName = victim.getName() == null ? "Unknown" : victim.getName();
         final TagResolver.Single playerNameTagResolver = Placeholder.unparsed("victim_name", victimName);
         return getComponent("commands.enderchest.offlinePlayerTitle", playerNameTagResolver);
+    }
+
+    public Component getSpawnStatusMessageComponent(final boolean status) {
+        final Component statusComponent = status ? this.enabledPatternComponent : this.disabledPatternComponent;
+        final TagResolver statusPlaceholder = Placeholder.component("status", statusComponent);
+        return getPrefixedComponent("commands.spawn.updateStatus", statusPlaceholder);
     }
 
     public Component getShopStatusMessageComponent(final boolean status) {

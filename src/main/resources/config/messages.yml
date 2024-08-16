@@ -7,7 +7,7 @@
 # ╚═╝  ╚═══╝╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝ ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝╚═════╝ ╚══════╝
 #
 # Copyright 2024 Nicklas Matzulla
-# ForestAttack v1.0.0-SNAPSHOT
+# ForestAttack v1.2.0
 #
 
 #
@@ -67,6 +67,10 @@ commands:
     failed: "Die <red>Enderchest</red> von <victim_name_colored> konnte <red>nicht geöffnet</red> werden."
     # Prefixes and colors of offline players are not loaded for performance reasons.
     offlinePlayerTitle: "<dark_gray><lang:container.enderchest> |</dark_gray> <red>Offline</red>"
+  spawn:
+    disabled: "Der <red>Spawn</red> ist <red>derzeit deaktiviert</red>!"
+    updateStatus: "Du hast den Spawn <status>."
+    usage: "Nutze <dark_gray>➥ /<aqua>spawn</aqua> <<aqua>enable</aqua>/<aqua>disable</aqua>>"
   shop:
     disabled: "Der <red>Shop</red> ist <red>derzeit deaktiviert</red>!"
     updateStatus: "Du hast den Shop <status>."

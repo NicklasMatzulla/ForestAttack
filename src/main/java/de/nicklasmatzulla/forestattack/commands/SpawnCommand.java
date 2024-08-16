@@ -25,10 +25,14 @@
 package de.nicklasmatzulla.forestattack.commands;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.nicklasmatzulla.forestattack.config.LocationsConfig;
 import de.nicklasmatzulla.forestattack.config.MessagesConfig;
+import de.nicklasmatzulla.forestattack.config.SettingsConfig;
 import de.nicklasmatzulla.forestattack.util.LocationsUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -39,9 +43,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 @SuppressWarnings({"UnstableApiUsage", "SameReturnValue"})
 @AllArgsConstructor
 public class SpawnCommand {
+    private final SettingsConfig settingsConfig;
     private final MessagesConfig messagesConfig;
     private final LocationsConfig locationsConfig;
     private final LocationsUtil locationsUtil;
@@ -50,6 +58,11 @@ public class SpawnCommand {
         return Commands.literal("spawn")
                 .requires(this::checkBasePermission)
                 .executes(this::executeBase)
+                .then(Commands.argument("status", StringArgumentType.string())
+                        .requires(this::checkStatusArgumentPermission)
+                        .suggests(this::suggestStatusArgument)
+                        .executes(this::executeStatusArgument)
+                )
                 .build();
     }
 
@@ -64,12 +77,49 @@ public class SpawnCommand {
             commandSender.sendMessage(onlyPlayerMessageComponent);
             return Command.SINGLE_SUCCESS;
         }
+        final boolean spawnEnabled = this.settingsConfig.isSpawnEnabled();
+        if (!spawnEnabled) {
+            final Component spawnDisabledMessageComponent = this.messagesConfig.getSpawnDisabledMessageComponent();
+            player.sendMessage(spawnDisabledMessageComponent);
+            return Command.SINGLE_SUCCESS;
+        }
         final Location spawnPointLocation = this.locationsConfig.getSpawnSpawnPointLocation();
         if (player.hasPermission("forestattack.commands.spawn.bypass")) {
             player.teleport(spawnPointLocation);
             return Command.SINGLE_SUCCESS;
         }
         this.locationsUtil.teleportWithTimer(player, spawnPointLocation);
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private boolean checkStatusArgumentPermission(final @NotNull CommandSourceStack source) {
+        return source.getSender().hasPermission("forestattack.commands.spawn.status");
+    }
+
+    private CompletableFuture<Suggestions> suggestStatusArgument(final @NotNull CommandContext<CommandSourceStack> context, SuggestionsBuilder builder) {
+        List.of("enable", "disable").forEach(builder::suggest);
+        return builder.buildFuture();
+    }
+
+    private int executeStatusArgument(final @NotNull CommandContext<CommandSourceStack> context) {
+        final CommandSender commandSender = context.getSource().getSender();
+        final String statusName = context.getArgument("status", String.class);
+        switch (statusName) {
+            case "enable" -> {
+                final Component spawnStatusMessageComponent = this.messagesConfig.getSpawnStatusMessageComponent(true);
+                this.settingsConfig.setSpawnEnabled(true);
+                commandSender.sendMessage(spawnStatusMessageComponent);
+            }
+            case "disable" -> {
+                final Component spawnStatusMessageComponent = this.messagesConfig.getSpawnStatusMessageComponent(false);
+                this.settingsConfig.setSpawnEnabled(false);
+                commandSender.sendMessage(spawnStatusMessageComponent);
+            }
+            default -> {
+                final Component usageMessageComponent = this.messagesConfig.getSpawnUsageMessageComponent();
+                commandSender.sendMessage(usageMessageComponent);
+            }
+        }
         return Command.SINGLE_SUCCESS;
     }
 

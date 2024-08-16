@@ -7,10 +7,12 @@
 # ╚═╝  ╚═══╝╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝ ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝╚═════╝ ╚══════╝
 #
 # Copyright 2024 Nicklas Matzulla
-# ForestAttack v1.0.0-SNAPSHOT
+# ForestAttack v1.2.0
 #
 
 commands:
+  spawn:
+    enabled: true
   shop:
     enabled: true
   kit:
